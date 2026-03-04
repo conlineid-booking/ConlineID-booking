@@ -19,7 +19,7 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 conline-gradient">
 
-    <!-- Container Utama: Kita hilangkan 'opacity-0' agar langsung muncul jika JS bermasalah -->
+    <!-- Container Utama -->
     <div id="booking-container" class="max-w-md w-full glass-card rounded-3xl shadow-2xl p-6 md:p-8 transition-all duration-500 transform">
         
         <div class="flex justify-center mb-4">
@@ -45,17 +45,17 @@
             </div>
         </div>
 
-        <!-- Form Section -->
-        <form id="conline-form" onsubmit="handleFormSubmit()" action="https://docs.google.com/forms/d/e/ID_FORM_KAMU/formResponse" method="POST" class="space-y-4">
+        <!-- FORM ACTION: Sudah terisi dengan ID Form asli kamu -->
+        <form id="conline-form" onsubmit="handleFormSubmit()" action="https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/formResponse" method="POST" class="space-y-4">
             
-            <!-- Hidden Fields: Data Otomatis -->
-            <input type="hidden" name="entry.ID_NAMA" id="input-hidden-nama">
-            <input type="hidden" name="entry.ID_TARIF" id="input-hidden-tarif">
+            <!-- Hidden Fields: Sudah terisi ID NAMA & ID TARIF -->
+            <input type="hidden" name="entry.1802300563" id="input-hidden-nama">
+            <input type="hidden" name="entry.2125301307" id="input-hidden-tarif">
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Jumlah Sesi</label>
-                    <input type="number" name="entry.ID_SESI" id="input-sesi" min="1" value="1" required
+                    <input type="number" name="entry.706433289" id="input-sesi" min="1" value="1" required
                         class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none text-sm shadow-sm">
                 </div>
                 <div>
@@ -75,18 +75,20 @@
             </div>
 
             <div class="space-y-3">
-                <input type="text" name="entry.ID_KLIEN" placeholder="Nama Lengkap" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
-                <input type="email" name="entry.ID_EMAIL" placeholder="Email Aktif" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
+                <input type="text" name="entry.1545448277" placeholder="Nama Lengkap" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
+                
+                <input type="email" name="entry.2088003318" placeholder="Email Aktif" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
                 
                 <div class="relative bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 flex items-center gap-2">
                         <i class="fas fa-file-invoice"></i> Upload Bukti Transfer
                     </label>
+                    <!-- PENTING: Ganti ID_BUKTI di bawah ini dengan ID asli (biasanya didapat via Inspect Element di Form Preview) -->
                     <input type="file" name="entry.ID_BUKTI" id="input-bukti" required
                         class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-600">
                 </div>
 
-                <textarea name="entry.ID_TOPIK" placeholder="Ceritakan singkat topik permasalahanmu..." class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none h-20 resize-none text-sm shadow-sm"></textarea>
+                <textarea name="entry.773258777" placeholder="Ceritakan singkat topik permasalahanmu..." class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none h-20 resize-none text-sm shadow-sm"></textarea>
             </div>
 
             <button type="submit" id="btn-submit" 
@@ -96,7 +98,7 @@
             </button>
         </form>
 
-        <!-- Pesan Sibuk (Hidden by default) -->
+        <!-- Pesan Sibuk -->
         <div id="busy-message" class="hidden text-center py-10">
             <div class="text-5xl mb-4">😌</div>
             <h3 class="conline-title text-xl text-slate-700 mb-2">Sedang Fokus Mendampingi</h3>
@@ -122,13 +124,11 @@
     </div>
 
     <script>
-        // Ambil Data dari URL
         const params = new URLSearchParams(window.location.search);
         const namaK = params.get('nama') || "Konsultan Conline.ID";
         const tarifK = parseInt(params.get('tarif')) || 0;
         const statusK = params.get('status') || "Available";
 
-        // Element UI
         const displayNama = document.getElementById('display-nama');
         const displayTarif = document.getElementById('display-tarif');
         const displayTotal = document.getElementById('display-total');
@@ -140,15 +140,13 @@
 
         const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
-        // Fungsi Update Total
         function updateTotal() {
             const total = (inputSesi.value || 1) * tarifK;
             displayTotal.innerText = formatRupiah(total);
         }
 
-        // Jalankan saat halaman siap
         window.addEventListener('load', () => {
-            // Set Hidden Data
+            // Pasang data otomatis ke input tersembunyi
             document.getElementById('input-hidden-nama').value = namaK;
             document.getElementById('input-hidden-tarif').value = tarifK;
 
@@ -171,7 +169,6 @@
             btnSubmit.disabled = true;
             document.getElementById('btn-text').innerText = "Memproses...";
             document.getElementById('btn-loader').classList.remove('hidden');
-            // Form akan otomatis terkirim ke Google Form Action URL
             setTimeout(() => { 
                 document.getElementById('success-modal').classList.remove('hidden');
             }, 3000);
