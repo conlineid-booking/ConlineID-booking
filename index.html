@@ -65,7 +65,14 @@
         </div>
 
         <!-- Form Section: Terhubung ke Google Form Conline.ID -->
-        <form id="conline-form" onsubmit="submitted=true; handleFormSubmit();" target="hidden_iframe" action="https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/formResponse" method="POST" class="space-y-4">
+        <!-- PENTING: enctype="multipart/form-data" ditambahkan untuk mendukung upload file -->
+        <form id="conline-form" 
+              onsubmit="submitted=true; handleFormSubmit();" 
+              target="hidden_iframe" 
+              action="https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/formResponse" 
+              method="POST" 
+              enctype="multipart/form-data" 
+              class="space-y-4">
             
             <!-- Hidden Fields: Data Otomatis -->
             <input type="hidden" name="entry.1802300563" id="input-hidden-nama">
@@ -142,7 +149,7 @@
             </div>
             <h3 class="conline-title text-2xl mb-2 text-slate-800">Berhasil Terkirim!</h3>
             <p class="text-slate-500 text-sm mb-6 leading-relaxed">
-                Terima kasih sudah memesan sesi di Conline.ID. Kami akan segera lakukan verifikasi pembayaran. Jadwal konsultasi dapat diakses pada email kamu setelah pembayaran terverifikasi. Cek berkala ya!
+                Terima kasih sudah memesan sesi di Conline.ID. Kami akan segera lakukan verifikasi pembayaran. Jadwal konsultasi dapat diakses pada email kamu setelah pembayaran terverifikasi. Cek berkala ya, Beb!
             </p>
             <button onclick="window.history.back()" 
                 class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold hover:bg-slate-700 transition-all shadow-lg active:scale-95">
