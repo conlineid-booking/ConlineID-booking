@@ -33,6 +33,9 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 conline-gradient">
 
+    <!-- Iframe Tersembunyi untuk Mencegah Redirect ke Google Form -->
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { showSuccessModal(); }"></iframe>
+
     <!-- Container Utama -->
     <div id="booking-container" class="max-w-md w-full glass-card rounded-3xl shadow-2xl p-6 md:p-8 transition-all duration-500 transform scale-100 opacity-100">
         
@@ -62,7 +65,7 @@
         </div>
 
         <!-- Form Section: Terhubung ke Google Form Conline.ID -->
-        <form id="conline-form" onsubmit="handleFormSubmit()" action="https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/formResponse" method="POST" class="space-y-4">
+        <form id="conline-form" onsubmit="submitted=true; handleFormSubmit();" target="hidden_iframe" action="https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/formResponse" method="POST" class="space-y-4">
             
             <!-- Hidden Fields: Data Otomatis -->
             <input type="hidden" name="entry.1802300563" id="input-hidden-nama">
@@ -71,7 +74,6 @@
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Jumlah Sesi</label>
-                    <!-- ID SESI: 706433289 -->
                     <input type="number" name="entry.706433289" id="input-sesi" min="1" value="1" required
                         class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none text-sm shadow-sm transition-all">
                 </div>
@@ -83,7 +85,7 @@
 
             <!-- Rekening Info -->
             <div class="bg-slate-800 rounded-2xl p-4 text-white shadow-xl relative overflow-hidden">
-                <div class="text-[9px] text-slate-400 uppercase font-bold tracking-widest mb-1">Tujuan Transfer (OCBC)</div>
+                <div class="text-[9px] text-slate-400 uppercase font-bold tracking-widest mb-1">Tujuan Transfer (Bank OCBC)</div>
                 <div class="flex justify-between items-center relative z-10">
                     <span id="acc-number" class="text-base font-mono font-bold tracking-widest">693800135701</span>
                     <button type="button" onclick="copyAcc(event)" class="text-[10px] bg-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-600 active:scale-95 transition-all font-semibold">SALIN</button>
@@ -95,11 +97,9 @@
             </div>
 
             <div class="space-y-3">
-                <!-- ID KLIEN: 1545448277 -->
                 <input type="text" name="entry.1545448277" placeholder="Nama Lengkap Kamu" required 
                     class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none text-sm shadow-sm transition-all">
                 
-                <!-- ID EMAIL: 2088003318 -->
                 <input type="email" name="entry.2088003318" placeholder="Email Aktif" required 
                     class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none text-sm shadow-sm transition-all">
                 
@@ -110,10 +110,9 @@
                     <!-- ID BUKTI: 797366609 -->
                     <input type="file" name="entry.797366609" id="input-bukti" required
                         class="w-full text-xs text-slate-400">
-                    <p class="text-[9px] text-slate-400 mt-2 italic">* Data dijamin aman & hanya untuk verifikasi internal.</p>
+                    <p class="text-[9px] text-slate-400 mt-2 italic">* Login Google diperlukan untuk mengupload bukti pembayaran.</p>
                 </div>
 
-                <!-- ID TOPIK: 773258777 -->
                 <textarea name="entry.773258777" placeholder="Apa topik yang ingin kamu bicarakan di sesi ini?" required
                     class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none h-20 resize-none text-sm shadow-sm transition-all"></textarea>
             </div>
@@ -137,7 +136,7 @@
 
     <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center border border-white transform transition-all duration-300">
+        <div class="bg-white rounded-3xl p-8 max-sm:mx-4 max-w-sm w-full shadow-2xl text-center border border-white transform transition-all duration-300">
             <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                 <i class="fas fa-check"></i>
             </div>
@@ -153,7 +152,8 @@
     </div>
 
     <script>
-        // Inisialisasi Data dari URL Parameters
+        var submitted = false;
+        
         const params = new URLSearchParams(window.location.search);
         const namaK = params.get('nama') || "Konsultan Conline.ID";
         const tarifK = parseInt(params.get('tarif')) || 0;
@@ -177,11 +177,9 @@
         }
 
         window.addEventListener('load', () => {
-            // Set data otomatis ke input hidden agar terkirim ke Google Form
             document.getElementById('input-hidden-nama').value = namaK;
             document.getElementById('input-hidden-tarif').value = tarifK;
 
-            // Logika Status Konsultan
             if(statusK.toLowerCase() === 'busy') {
                 form.classList.add('hidden');
                 document.getElementById('info-section').classList.add('opacity-50');
@@ -200,16 +198,16 @@
         inputSesi.addEventListener('input', updateTotal);
 
         function handleFormSubmit() {
-            // Indikator Loading
             btnSubmit.disabled = true;
             document.getElementById('btn-text').innerText = "Sedang Memproses...";
             document.getElementById('btn-loader').classList.remove('hidden');
-            
-            // Catatan: Form akan terkirim secara native ke Google Form URL
-            // Kita tampilkan modal sukses sebagai feedback visual
-            setTimeout(() => {
-                document.getElementById('success-modal').classList.remove('hidden');
-            }, 2500);
+        }
+
+        function showSuccessModal() {
+            document.getElementById('success-modal').classList.remove('hidden');
+            btnSubmit.disabled = false;
+            document.getElementById('btn-text').innerText = "Verifikasi & Submit Sesi";
+            document.getElementById('btn-loader').classList.add('hidden');
         }
 
         function copyAcc(e) {
