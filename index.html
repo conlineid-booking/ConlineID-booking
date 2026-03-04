@@ -56,7 +56,7 @@
                 <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Konsultan Pilihan</span>
                 <span id="badge-status" class="px-2 py-0.5 rounded-full text-[9px] font-bold">AVAILABLE</span>
             </div>
-            <h2 id="display-nama" class="text-lg font-semibold text-slate-700 leading-tight">Memuat nama...</h2>
+            <h2 id="display-nama" class="text-lg font-semibold text-slate-700 leading-tight">Memuat data...</h2>
             <div class="flex justify-between items-baseline mt-1">
                 <p id="display-tarif-label" class="text-xs text-slate-500">Tarif Sesi: <span id="display-tarif" class="font-bold text-slate-700">Rp 0</span></p>
             </div>
@@ -71,6 +71,7 @@
               enctype="multipart/form-data" 
               class="space-y-4">
             
+            <!-- Hidden Fields (Data Konsultan) -->
             <input type="hidden" name="entry.1802300563" id="input-hidden-nama">
             <input type="hidden" name="entry.2125301307" id="input-hidden-tarif">
 
@@ -100,7 +101,7 @@
             </div>
 
             <div class="space-y-3">
-                <input type="text" name="entry.1545448277" placeholder="Nama Lengkap Kamu" required 
+                <input type="text" name="entry.1545448277" placeholder="Nama Lengkap Anda" required 
                     class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none text-sm shadow-sm transition-all">
                 
                 <input type="email" name="entry.2088003318" placeholder="Email Aktif" required 
@@ -112,15 +113,18 @@
                     </label>
                     <!-- ID BUKTI: 797366609 -->
                     <input type="file" name="entry.797366609" id="input-bukti" required class="w-full text-xs text-slate-400">
+                    <p class="text-[9px] text-blue-500 mt-2 font-semibold">
+                        <i class="fas fa-info-circle"></i> Pastikan Anda telah masuk ke akun Google untuk mengunggah berkas.
+                    </p>
                 </div>
 
-                <textarea name="entry.773258777" placeholder="Apa topik yang ingin kamu bicarakan di sesi ini?" required
+                <textarea name="entry.773258777" placeholder="Mohon deskripsikan topik konsultasi Anda..." required
                     class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none h-20 resize-none text-sm shadow-sm transition-all"></textarea>
             </div>
 
             <button type="submit" id="btn-submit"
                 class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold shadow-xl hover:bg-slate-900 transition-all active:scale-95 flex items-center justify-center gap-3">
-                <span id="btn-text">Verifikasi & Submit Sesi</span>
+                <span id="btn-text">Verifikasi & Ajukan Pesanan</span>
                 <i id="btn-loader" class="fas fa-circle-notch animate-spin-custom hidden"></i>
             </button>
         </form>
@@ -128,8 +132,8 @@
         <!-- Pesan Sibuk -->
         <div id="busy-message" class="hidden text-center py-10 animate-fade-in">
             <div class="text-5xl mb-4">😌</div>
-            <h3 class="conline-title text-xl text-slate-700 mb-2">Konsultan Sedang Fokus</h3>
-            <p class="text-sm text-slate-500 px-4 leading-relaxed">Maaf ya Beb, konsultan ini sedang mendampingi klien lain agar hasilnya maksimal. Pilih jadwal atau konsultan lain di Dashboard ya!</p>
+            <h3 class="conline-title text-xl text-slate-700 mb-2">Konsultan Sedang Bertugas</h3>
+            <p class="text-sm text-slate-500 px-4 leading-relaxed">Mohon maaf, saat ini konsultan kami sedang mendampingi klien lain agar dapat memberikan hasil yang maksimal. Silakan pilih jadwal atau konsultan lain melalui Dashboard.</p>
             <button onclick="window.history.back()" 
                 class="mt-8 px-6 py-2 border border-slate-200 rounded-full text-slate-500 font-semibold text-xs hover:bg-slate-50 transition-all shadow-sm">Kembali ke Dashboard</button>
         </div>
@@ -143,11 +147,11 @@
             </div>
             <h3 class="conline-title text-2xl mb-2 text-slate-800">Berhasil Terkirim!</h3>
             <p class="text-slate-500 text-sm mb-6 leading-relaxed">
-                Terima kasih sudah memesan sesi di Conline.ID. Kami akan segera lakukan verifikasi pembayaran. Jadwal konsultan dapat diakses pada Email Anda setelah pembayaran terverifikasi. Cek berkala ya, Beb!
+                Terima kasih sudah memesan sesi di Conline.ID. Kami akan segera lakukan verifikasi pembayaran. Jadwal konsultan dapat diakses pada Email Anda setelah pembayaran terverifikasi. Mohon cek email secara berkala.
             </p>
             <button onclick="window.history.back()" 
                 class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold hover:bg-slate-700 transition-all shadow-lg active:scale-95">
-                Siap, Terimakasih!
+                Siap, Terima Kasih
             </button>
         </div>
     </div>
@@ -207,7 +211,7 @@
         function showSuccessModal() {
             document.getElementById('success-modal').classList.remove('hidden');
             btnSubmit.disabled = false;
-            document.getElementById('btn-text').innerText = "Verifikasi & Submit Sesi";
+            document.getElementById('btn-text').innerText = "Verifikasi & Ajukan Pesanan";
             document.getElementById('btn-loader').classList.add('hidden');
         }
 
