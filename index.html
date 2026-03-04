@@ -44,35 +44,50 @@
             <p id="display-tarif-label" class="text-xs text-slate-500 mt-1">Tarif Layanan: <span id="display-tarif" class="font-bold text-slate-700">Rp 0</span></p>
         </div>
 
-        <!-- Panduan Pengisian -->
-        <div id="instruction-section" class="space-y-4 mb-8">
-            <div class="flex gap-4 items-start">
-                <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold shadow-md">1</div>
-                <p class="text-xs text-slate-600 leading-relaxed">Klik tombol di bawah untuk menuju formulir resmi pembayaran Conline.ID.</p>
+        <!-- Form Pengisian Data -->
+        <div id="form-section" class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Jumlah Sesi</label>
+                    <input type="number" id="input-sesi" min="1" value="1" required
+                        class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none text-sm shadow-sm transition-all">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Total Bayar</label>
+                    <div class="w-full px-3 py-2 rounded-xl bg-blue-600 text-white font-bold text-sm text-center shadow-lg" id="display-total">Rp 0</div>
+                </div>
             </div>
-            <div class="flex gap-4 items-start">
-                <div class="w-8 h-8 rounded-full bg-slate-800 text-white flex items-center justify-center flex-shrink-0 text-xs font-bold shadow-md">2</div>
-                <p class="text-xs text-slate-600 leading-relaxed">Data konsultan Anda akan terisi secara otomatis untuk memudahkan proses verifikasi.</p>
-            </div>
-        </div>
 
-        <!-- Tombol Pengalihan -->
-        <div class="space-y-3">
+            <!-- Rekening Info -->
+            <div class="bg-slate-800 rounded-2xl p-4 text-white shadow-xl relative overflow-hidden">
+                <div class="text-[9px] text-slate-400 uppercase font-bold tracking-widest mb-1">Tujuan Transfer (Bank OCBC)</div>
+                <div class="flex justify-between items-center relative z-10">
+                    <span id="acc-number" class="text-base font-mono font-bold tracking-widest">693800135701</span>
+                    <button type="button" onclick="copyAcc(event)" class="text-[10px] bg-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-600 active:scale-95 transition-all font-semibold">SALIN</button>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-1 relative z-10">a/n PT Kelas Kita Digital</div>
+            </div>
+
+            <div class="space-y-3">
+                <input type="text" id="input-klien" placeholder="Nama Lengkap Anda" required 
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none text-sm shadow-sm transition-all">
+                
+                <input type="email" id="input-email" placeholder="Email Aktif" required 
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none text-sm shadow-sm transition-all">
+
+                <textarea id="input-topik" placeholder="Mohon deskripsikan topik konsultasi Anda secara singkat..." required
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none h-20 resize-none text-sm shadow-sm transition-all"></textarea>
+            </div>
+
             <button id="btn-redirect" onclick="redirectToForm()" 
                 class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold shadow-xl hover:bg-slate-900 transition-all active:scale-95 flex items-center justify-center gap-3 group">
-                <span id="btn-label">Lanjutkan ke Konfirmasi</span>
+                <span id="btn-label">Lanjutkan ke Upload Bukti</span>
                 <i id="btn-icon" class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
             </button>
-            
-            <!-- Link Cadangan (Muncul jika pengalihan otomatis gagal) -->
-            <div id="fallback-link" class="hidden text-center">
-                <p class="text-[10px] text-slate-500 mb-2">Pengalihan otomatis terhambat? Klik di bawah ini:</p>
-                <a id="manual-link" href="#" class="text-blue-600 text-[11px] font-semibold underline">Klik di sini untuk buka formulir</a>
-            </div>
         </div>
 
         <p class="text-[10px] text-slate-400 text-center mt-6">
-            <i class="fas fa-info-circle mr-1"></i> Anda akan diarahkan ke sistem Google Form resmi untuk menjamin keamanan pengunggahan berkas.
+            <i class="fas fa-info-circle mr-1"></i> Data Anda akan terisi otomatis di Google Form. Anda cukup mengunggah bukti transfer di tahap akhir.
         </p>
 
         <!-- Tampilan Jika Konsultan Sedang Bertugas -->
@@ -88,59 +103,93 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const namaK = params.get('nama') || "Konsultan Conline.ID";
-        const tarifK = params.get('tarif') || "0";
+        const tarifK = parseInt(params.get('tarif')) || 0;
         const statusK = params.get('status') || "Available";
 
         const displayNama = document.getElementById('display-nama');
         const displayTarif = document.getElementById('display-tarif');
+        const displayTotal = document.getElementById('display-total');
+        const inputSesi = document.getElementById('input-sesi');
         const busyMessage = document.getElementById('busy-message');
+        const formSection = document.getElementById('form-section');
         const infoSection = document.getElementById('info-section');
-        const instructionSection = document.getElementById('instruction-section');
-        const btnRedirect = document.getElementById('btn-redirect');
         const badgeStatus = document.getElementById('badge-status');
-        const fallbackArea = document.getElementById('fallback-link');
-        const manualLink = document.getElementById('manual-link');
 
         const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
-        // Menyiapkan URL Google Form dengan parameter Pre-filled
-        const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/viewform";
-        const finalUrl = `${baseUrl}?entry.1802300563=${encodeURIComponent(namaK)}&entry.2125301307=${encodeURIComponent(tarifK)}`;
+        function updateTotal() {
+            const sessions = parseInt(inputSesi.value) || 1;
+            const total = sessions * tarifK;
+            displayTotal.innerText = formatRupiah(total);
+        }
 
         window.addEventListener('load', () => {
             if(statusK.toLowerCase() === 'busy') {
                 infoSection.classList.add('hidden');
-                btnRedirect.classList.add('hidden');
-                instructionSection.classList.add('hidden');
+                formSection.classList.add('hidden');
                 busyMessage.classList.remove('hidden');
                 badgeStatus.innerText = "BUSY";
                 badgeStatus.className = "px-2 py-0.5 rounded-full text-[9px] font-bold bg-red-100 text-red-500 uppercase";
             } else {
                 displayNama.innerText = namaK;
                 displayTarif.innerText = formatRupiah(tarifK);
-                manualLink.href = finalUrl;
+                updateTotal();
             }
         });
 
+        inputSesi.addEventListener('input', updateTotal);
+
         function redirectToForm() {
-            // Memberikan indikasi pemrosesan pada tombol
-            const label = document.getElementById('btn-label');
-            const icon = document.getElementById('btn-icon');
+            const klien = document.getElementById('input-klien').value;
+            const email = document.getElementById('input-email').value;
+            const sesi = document.getElementById('input-sesi').value;
+            const topik = document.getElementById('input-topik').value;
+
+            if(!klien || !email || !topik) {
+                alert("Mohon lengkapi semua data sebelum melanjutkan.");
+                return;
+            }
+
+            // URL Google Form dengan parameter Pre-filled
+            const baseUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/viewform";
             
-            label.innerText = "Menghubungkan...";
-            icon.className = "fas fa-circle-notch animate-spin";
-            btnRedirect.disabled = true;
+            // Pemetaan Entry ID
+            const query = new URLSearchParams({
+                'entry.1802300563': namaK,      // Nama Konsultan
+                'entry.2125301307': tarifK,     // Tarif
+                'entry.706433289': sesi,        // Jumlah Sesi
+                'entry.1545448277': klien,      // Nama Klien
+                'entry.2088003318': email,      // Email
+                'entry.773258777': topik        // Topik
+            });
 
-            // Mencoba pengalihan otomatis
-            window.location.href = finalUrl;
+            const finalUrl = `${baseUrl}?${query.toString()}`;
+            
+            const btn = document.getElementById('btn-redirect');
+            btn.innerHTML = '<i class="fas fa-circle-notch animate-spin"></i> Menghubungkan...';
+            btn.disabled = true;
 
-            // Jika dalam 3 detik halaman tidak berpindah, munculkan link manual (Fallback)
             setTimeout(() => {
-                fallbackArea.classList.remove('hidden');
-                label.innerText = "Lanjutkan ke Konfirmasi";
-                icon.className = "fas fa-arrow-right";
-                btnRedirect.disabled = false;
-            }, 3000);
+                window.location.href = finalUrl;
+            }, 800);
+        }
+
+        function copyAcc(e) {
+            const accNum = document.getElementById('acc-number').innerText;
+            const tempInput = document.createElement("input");
+            tempInput.value = accNum; 
+            document.body.appendChild(tempInput); 
+            tempInput.select(); 
+            document.execCommand("copy"); 
+            document.body.removeChild(tempInput);
+            
+            const btn = e.target;
+            btn.innerText = "OK!"; 
+            btn.classList.replace('bg-slate-700', 'bg-green-600');
+            setTimeout(() => { 
+                btn.innerText = "SALIN"; 
+                btn.classList.replace('bg-green-600', 'bg-slate-700'); 
+            }, 2000);
         }
     </script>
 </body>
