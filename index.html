@@ -15,26 +15,42 @@
         
         @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .animate-spin-custom { animation: spinner 1.5s linear infinite; }
+
+        input[type="file"]::file-selector-button {
+            background-color: #eff6ff;
+            color: #3b82f6;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            margin-right: 1rem;
+            font-weight: 600;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        input[type="file"]::file-selector-button:hover { background-color: #dbeafe; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 conline-gradient">
 
     <!-- Container Utama -->
-    <div id="booking-container" class="max-w-md w-full glass-card rounded-3xl shadow-2xl p-6 md:p-8 transition-all duration-500 transform">
+    <div id="booking-container" class="max-w-md w-full glass-card rounded-3xl shadow-2xl p-6 md:p-8 transition-all duration-500 transform scale-100 opacity-100">
         
+        <!-- Secure Badge -->
         <div class="flex justify-center mb-4">
             <div class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest flex items-center gap-2">
                 <i class="fas fa-lock"></i> SECURE GOOGLE VERIFIED
             </div>
         </div>
 
+        <!-- Header -->
         <div class="text-center mb-6">
             <h1 class="conline-title text-3xl text-slate-800 mb-1">Pemesanan Sesi</h1>
             <p class="text-slate-500 text-xs px-4 text-center italic">Professional Partner by Conline.ID</p>
         </div>
 
-        <!-- Info Konsultan -->
-        <div id="info-section" class="bg-blue-50/50 rounded-2xl p-4 mb-6 border border-blue-100">
+        <!-- Info Konsultan (Dinamis dari URL) -->
+        <div id="info-section" class="bg-blue-50/50 rounded-2xl p-4 mb-6 border border-blue-100 transition-all duration-300">
             <div class="flex justify-between items-center mb-1">
                 <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Konsultan Pilihan</span>
                 <span id="badge-status" class="px-2 py-0.5 rounded-full text-[9px] font-bold">AVAILABLE</span>
@@ -45,18 +61,19 @@
             </div>
         </div>
 
-        <!-- FORM ACTION: Sudah terisi dengan ID Form asli kamu -->
+        <!-- Form Section: Terhubung ke Google Form Conline.ID -->
         <form id="conline-form" onsubmit="handleFormSubmit()" action="https://docs.google.com/forms/d/e/1FAIpQLSfIA0iq7iZaNgOLuyODknsU_wdsusc5uxNbHJjKyXPMHy9yxQ/formResponse" method="POST" class="space-y-4">
             
-            <!-- Hidden Fields: Sudah terisi ID NAMA & ID TARIF -->
+            <!-- Hidden Fields: Data Otomatis -->
             <input type="hidden" name="entry.1802300563" id="input-hidden-nama">
             <input type="hidden" name="entry.2125301307" id="input-hidden-tarif">
 
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Jumlah Sesi</label>
+                    <!-- ID SESI: 706433289 -->
                     <input type="number" name="entry.706433289" id="input-sesi" min="1" value="1" required
-                        class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none text-sm shadow-sm">
+                        class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none text-sm shadow-sm transition-all">
                 </div>
                 <div>
                     <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Total Bayar</label>
@@ -65,65 +82,78 @@
             </div>
 
             <!-- Rekening Info -->
-            <div class="bg-slate-800 rounded-2xl p-4 text-white shadow-xl relative">
+            <div class="bg-slate-800 rounded-2xl p-4 text-white shadow-xl relative overflow-hidden">
                 <div class="text-[9px] text-slate-400 uppercase font-bold tracking-widest mb-1">Tujuan Transfer (OCBC)</div>
-                <div class="flex justify-between items-center">
+                <div class="flex justify-between items-center relative z-10">
                     <span id="acc-number" class="text-base font-mono font-bold tracking-widest">693800135701</span>
-                    <button type="button" onclick="copyAcc()" class="text-[10px] bg-slate-700 px-2 py-1 rounded-md hover:bg-slate-600 active:scale-90 transition-all">SALIN</button>
+                    <button type="button" onclick="copyAcc(event)" class="text-[10px] bg-slate-700 px-3 py-1.5 rounded-lg hover:bg-slate-600 active:scale-95 transition-all font-semibold">SALIN</button>
                 </div>
-                <div class="text-[10px] text-slate-400 mt-1">a/n PT Kelas Kita Digital</div>
+                <div class="text-[10px] text-slate-400 mt-1 relative z-10">a/n PT Kelas Kita Digital</div>
+                <div class="absolute right-[-10px] bottom-[-10px] opacity-10 text-4xl transform rotate-12">
+                    <i class="fas fa-university"></i>
+                </div>
             </div>
 
             <div class="space-y-3">
-                <input type="text" name="entry.1545448277" placeholder="Nama Lengkap" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
+                <!-- ID KLIEN: 1545448277 -->
+                <input type="text" name="entry.1545448277" placeholder="Nama Lengkap Kamu" required 
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none text-sm shadow-sm transition-all">
                 
-                <input type="email" name="entry.2088003318" placeholder="Email Aktif" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
+                <!-- ID EMAIL: 2088003318 -->
+                <input type="email" name="entry.2088003318" placeholder="Email Aktif" required 
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none text-sm shadow-sm transition-all">
                 
                 <div class="relative bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 flex items-center gap-2">
-                        <i class="fas fa-file-invoice"></i> Upload Bukti Transfer
+                        <i class="fas fa-file-invoice-dollar text-blue-500"></i> Bukti Transfer (PDF/Gambar)
                     </label>
-                    <!-- PENTING: Ganti ID_BUKTI di bawah ini dengan ID asli (biasanya didapat via Inspect Element di Form Preview) -->
-                    <input type="file" name="entry.ID_BUKTI" id="input-bukti" required
-                        class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-600">
+                    <!-- ID BUKTI: 797366609 -->
+                    <input type="file" name="entry.797366609" id="input-bukti" required
+                        class="w-full text-xs text-slate-400">
+                    <p class="text-[9px] text-slate-400 mt-2 italic">* Data dijamin aman & hanya untuk verifikasi internal.</p>
                 </div>
 
-                <textarea name="entry.773258777" placeholder="Ceritakan singkat topik permasalahanmu..." class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none h-20 resize-none text-sm shadow-sm"></textarea>
+                <!-- ID TOPIK: 773258777 -->
+                <textarea name="entry.773258777" placeholder="Apa topik yang ingin kamu bicarakan di sesi ini?" required
+                    class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 focus:ring-2 focus:ring-blue-50 outline-none h-20 resize-none text-sm shadow-sm transition-all"></textarea>
             </div>
 
-            <button type="submit" id="btn-submit" 
-                class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold shadow-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-3">
+            <button type="submit" id="btn-submit"
+                class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold shadow-xl hover:bg-slate-900 transition-all active:scale-95 flex items-center justify-center gap-3">
                 <span id="btn-text">Verifikasi & Submit Sesi</span>
                 <i id="btn-loader" class="fas fa-circle-notch animate-spin-custom hidden"></i>
             </button>
         </form>
 
         <!-- Pesan Sibuk -->
-        <div id="busy-message" class="hidden text-center py-10">
+        <div id="busy-message" class="hidden text-center py-10 animate-fade-in">
             <div class="text-5xl mb-4">😌</div>
-            <h3 class="conline-title text-xl text-slate-700 mb-2">Sedang Fokus Mendampingi</h3>
-            <p class="text-sm text-slate-500 px-4 leading-relaxed">Maaf ya Beb, konsultan ini sedang sibuk memberikan bimbingan intensif agar hasilnya maksimal. Pilih yang lain ya!</p>
-            <button onclick="window.history.back()" class="mt-8 px-6 py-2 border border-slate-200 rounded-full text-slate-500 font-semibold text-xs hover:bg-slate-50 transition-all shadow-sm">Kembali ke Dashboard</button>
+            <h3 class="conline-title text-xl text-slate-700 mb-2">Konsultan Sedang Fokus</h3>
+            <p class="text-sm text-slate-500 px-4 leading-relaxed">Maaf ya Beb, konsultan ini sedang mendampingi klien lain agar hasilnya maksimal. Pilih jadwal atau konsultan lain di Dashboard ya!</p>
+            <button onclick="window.history.back()" 
+                class="mt-8 px-6 py-2 border border-slate-200 rounded-full text-slate-500 font-semibold text-xs hover:bg-slate-50 transition-all shadow-sm">Kembali ke Dashboard</button>
         </div>
     </div>
 
     <!-- Success Modal -->
     <div id="success-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
-        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl scale-95 transition-all text-center border border-white">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl text-center border border-white transform transition-all duration-300">
             <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
                 <i class="fas fa-check"></i>
             </div>
-            <h3 class="conline-title text-2xl mb-2 text-slate-800">Berhasil!</h3>
+            <h3 class="conline-title text-2xl mb-2 text-slate-800">Berhasil Terkirim!</h3>
             <p class="text-slate-500 text-sm mb-6 leading-relaxed">
-                Bukti bayar dan data pesanan sudah aman di sistem Conline.ID. Tim kami akan mengirimkan jadwal ke email kamu segera.
+                Terima kasih sudah memesan sesi di Conline.ID. Bukti bayar sudah kami terima, tim kami akan segera menghubungi kamu via email ya, Beb.
             </p>
-            <button onclick="window.history.back()" class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold hover:bg-slate-700 transition-all shadow-lg">
-                Kembali ke Dashboard
+            <button onclick="window.history.back()" 
+                class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold hover:bg-slate-700 transition-all shadow-lg active:scale-95">
+                Siap, Kembali ke Dashboard
             </button>
         </div>
     </div>
 
     <script>
+        // Inisialisasi Data dari URL Parameters
         const params = new URLSearchParams(window.location.search);
         const namaK = params.get('nama') || "Konsultan Conline.ID";
         const tarifK = parseInt(params.get('tarif')) || 0;
@@ -141,15 +171,17 @@
         const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
 
         function updateTotal() {
-            const total = (inputSesi.value || 1) * tarifK;
+            const sessions = parseInt(inputSesi.value) || 1;
+            const total = sessions * tarifK;
             displayTotal.innerText = formatRupiah(total);
         }
 
         window.addEventListener('load', () => {
-            // Pasang data otomatis ke input tersembunyi
+            // Set data otomatis ke input hidden agar terkirim ke Google Form
             document.getElementById('input-hidden-nama').value = namaK;
             document.getElementById('input-hidden-tarif').value = tarifK;
 
+            // Logika Status Konsultan
             if(statusK.toLowerCase() === 'busy') {
                 form.classList.add('hidden');
                 document.getElementById('info-section').classList.add('opacity-50');
@@ -159,6 +191,8 @@
             } else {
                 displayNama.innerText = namaK;
                 displayTarif.innerText = formatRupiah(tarifK);
+                badgeStatus.innerText = "AVAILABLE";
+                badgeStatus.className = "px-2 py-0.5 rounded-full text-[9px] font-bold bg-green-100 text-green-500";
                 updateTotal();
             }
         });
@@ -166,19 +200,34 @@
         inputSesi.addEventListener('input', updateTotal);
 
         function handleFormSubmit() {
+            // Indikator Loading
             btnSubmit.disabled = true;
-            document.getElementById('btn-text').innerText = "Memproses...";
+            document.getElementById('btn-text').innerText = "Sedang Memproses...";
             document.getElementById('btn-loader').classList.remove('hidden');
-            setTimeout(() => { 
+            
+            // Catatan: Form akan terkirim secara native ke Google Form URL
+            // Kita tampilkan modal sukses sebagai feedback visual
+            setTimeout(() => {
                 document.getElementById('success-modal').classList.remove('hidden');
-            }, 3000);
+            }, 2500);
         }
 
-        function copyAcc() {
+        function copyAcc(e) {
             const accNum = document.getElementById('acc-number').innerText;
-            const temp = document.createElement("input");
-            temp.value = accNum; document.body.appendChild(temp); temp.select(); document.execCommand("copy"); document.body.removeChild(temp);
-            event.target.innerText = "OK!"; setTimeout(() => event.target.innerText = "SALIN", 2000);
+            const tempInput = document.createElement("input");
+            tempInput.value = accNum; 
+            document.body.appendChild(tempInput); 
+            tempInput.select(); 
+            document.execCommand("copy"); 
+            document.body.removeChild(tempInput);
+            
+            const btn = e.target;
+            btn.innerText = "OK!"; 
+            btn.classList.replace('bg-slate-700', 'bg-green-600');
+            setTimeout(() => {
+                btn.innerText = "SALIN";
+                btn.classList.replace('bg-green-600', 'bg-slate-700');
+            }, 2000);
         }
     </script>
 </body>
