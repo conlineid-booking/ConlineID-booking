@@ -33,26 +33,24 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4 conline-gradient">
 
-    <!-- Iframe Tersembunyi untuk Mencegah Redirect ke Google Form -->
+    <!-- Iframe Tersembunyi -->
     <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) { showSuccessModal(); }"></iframe>
 
     <!-- Container Utama -->
     <div id="booking-container" class="max-w-md w-full glass-card rounded-3xl shadow-2xl p-6 md:p-8 transition-all duration-500 transform scale-100 opacity-100">
         
-        <!-- Secure Badge -->
         <div class="flex justify-center mb-4">
             <div class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest flex items-center gap-2">
                 <i class="fas fa-lock"></i> SECURE GOOGLE VERIFIED
             </div>
         </div>
 
-        <!-- Header -->
         <div class="text-center mb-6">
             <h1 class="conline-title text-3xl text-slate-800 mb-1">Pemesanan Sesi</h1>
             <p class="text-slate-500 text-xs px-4 text-center italic">Professional Partner by Conline.ID</p>
         </div>
 
-        <!-- Info Konsultan (Dinamis dari URL) -->
+        <!-- Info Konsultan -->
         <div id="info-section" class="bg-blue-50/50 rounded-2xl p-4 mb-6 border border-blue-100 transition-all duration-300">
             <div class="flex justify-between items-center mb-1">
                 <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Konsultan Pilihan</span>
@@ -64,8 +62,7 @@
             </div>
         </div>
 
-        <!-- Form Section: Terhubung ke Google Form Conline.ID -->
-        <!-- PENTING: enctype="multipart/form-data" ditambahkan untuk mendukung upload file -->
+        <!-- Form Section -->
         <form id="conline-form" 
               onsubmit="submitted=true; handleFormSubmit();" 
               target="hidden_iframe" 
@@ -74,7 +71,6 @@
               enctype="multipart/form-data" 
               class="space-y-4">
             
-            <!-- Hidden Fields: Data Otomatis -->
             <input type="hidden" name="entry.1802300563" id="input-hidden-nama">
             <input type="hidden" name="entry.2125301307" id="input-hidden-tarif">
 
@@ -114,10 +110,7 @@
                     <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 flex items-center gap-2">
                         <i class="fas fa-file-invoice-dollar text-blue-500"></i> Bukti Transfer (PDF/Gambar)
                     </label>
-                    <!-- ID BUKTI: 797366609 -->
-                    <input type="file" name="entry.797366609" id="input-bukti" required
-                        class="w-full text-xs text-slate-400">
-                    <p class="text-[9px] text-slate-400 mt-2 italic">* Login Google diperlukan untuk mengupload bukti pembayaran.</p>
+                    <input type="file" name="entry.797366609" id="input-bukti" required class="w-full text-xs text-slate-400">
                 </div>
 
                 <textarea name="entry.773258777" placeholder="Apa topik yang ingin kamu bicarakan di sesi ini?" required
@@ -149,7 +142,7 @@
             </div>
             <h3 class="conline-title text-2xl mb-2 text-slate-800">Berhasil Terkirim!</h3>
             <p class="text-slate-500 text-sm mb-6 leading-relaxed">
-                Terima kasih sudah memesan sesi di Conline.ID. Kami akan segera lakukan verifikasi pembayaran. Jadwal konsultasi dapat diakses pada email kamu setelah pembayaran terverifikasi. Cek berkala ya, Beb!
+                Terima kasih sudah memesan sesi di Conline.ID. Kami akan segera lakukan verifikasi pembayaran. Jadwal konsultan dapat diakses pada Email Anda setelah pembayaran terverifikasi. Cek berkala ya, Beb!
             </p>
             <button onclick="window.history.back()" 
                 class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold hover:bg-slate-700 transition-all shadow-lg active:scale-95">
@@ -160,7 +153,6 @@
 
     <script>
         var submitted = false;
-        
         const params = new URLSearchParams(window.location.search);
         const namaK = params.get('nama') || "Konsultan Conline.ID";
         const tarifK = parseInt(params.get('tarif')) || 0;
@@ -208,6 +200,7 @@
             btnSubmit.disabled = true;
             document.getElementById('btn-text').innerText = "Sedang Memproses...";
             document.getElementById('btn-loader').classList.remove('hidden');
+            setTimeout(() => { if(submitted) showSuccessModal(); }, 6000);
         }
 
         function showSuccessModal() {
@@ -220,19 +213,10 @@
         function copyAcc(e) {
             const accNum = document.getElementById('acc-number').innerText;
             const tempInput = document.createElement("input");
-            tempInput.value = accNum; 
-            document.body.appendChild(tempInput); 
-            tempInput.select(); 
-            document.execCommand("copy"); 
-            document.body.removeChild(tempInput);
-            
+            tempInput.value = accNum; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput);
             const btn = e.target;
-            btn.innerText = "OK!"; 
-            btn.classList.replace('bg-slate-700', 'bg-green-600');
-            setTimeout(() => {
-                btn.innerText = "SALIN";
-                btn.classList.replace('bg-green-600', 'bg-slate-700');
-            }, 2000);
+            btn.innerText = "OK!"; btn.classList.replace('bg-slate-700', 'bg-green-600');
+            setTimeout(() => { btn.innerText = "SALIN"; btn.classList.replace('bg-green-600', 'bg-slate-700'); }, 2000);
         }
     </script>
 </body>
