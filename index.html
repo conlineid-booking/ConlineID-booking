@@ -1,1 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conline.ID - Konfirmasi Pemesanan Aman</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; background: #fdfbfb; }
+        .conline-gradient { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .conline-title { font-family: 'Playfair Display', serif; }
+        
+        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .animate-spin-custom { animation: spinner 1.5s linear infinite; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 conline-gradient">
 
+    <!-- Container Utama: Kita hilangkan 'opacity-0' agar langsung muncul jika JS bermasalah -->
+    <div id="booking-container" class="max-w-md w-full glass-card rounded-3xl shadow-2xl p-6 md:p-8 transition-all duration-500 transform">
+        
+        <div class="flex justify-center mb-4">
+            <div class="bg-green-100 text-green-600 px-3 py-1 rounded-full text-[10px] font-bold tracking-widest flex items-center gap-2">
+                <i class="fas fa-lock"></i> SECURE GOOGLE VERIFIED
+            </div>
+        </div>
+
+        <div class="text-center mb-6">
+            <h1 class="conline-title text-3xl text-slate-800 mb-1">Pemesanan Sesi</h1>
+            <p class="text-slate-500 text-xs px-4 text-center italic">Professional Partner by Conline.ID</p>
+        </div>
+
+        <!-- Info Konsultan -->
+        <div id="info-section" class="bg-blue-50/50 rounded-2xl p-4 mb-6 border border-blue-100">
+            <div class="flex justify-between items-center mb-1">
+                <span class="text-[10px] font-bold text-blue-400 uppercase tracking-widest">Konsultan Pilihan</span>
+                <span id="badge-status" class="px-2 py-0.5 rounded-full text-[9px] font-bold">AVAILABLE</span>
+            </div>
+            <h2 id="display-nama" class="text-lg font-semibold text-slate-700 leading-tight">Memuat nama...</h2>
+            <div class="flex justify-between items-baseline mt-1">
+                <p id="display-tarif-label" class="text-xs text-slate-500">Tarif Sesi: <span id="display-tarif" class="font-bold text-slate-700">Rp 0</span></p>
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <form id="conline-form" onsubmit="handleFormSubmit()" action="https://docs.google.com/forms/d/e/ID_FORM_KAMU/formResponse" method="POST" class="space-y-4">
+            
+            <!-- Hidden Fields: Data Otomatis -->
+            <input type="hidden" name="entry.ID_NAMA" id="input-hidden-nama">
+            <input type="hidden" name="entry.ID_TARIF" id="input-hidden-tarif">
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Jumlah Sesi</label>
+                    <input type="number" name="entry.ID_SESI" id="input-sesi" min="1" value="1" required
+                        class="w-full px-3 py-2 rounded-xl border border-slate-200 focus:ring-2 focus:ring-blue-400 outline-none text-sm shadow-sm">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase ml-1 mb-1">Total Bayar</label>
+                    <div class="w-full px-3 py-2 rounded-xl bg-blue-600 text-white font-bold text-sm text-center shadow-lg" id="display-total">Rp 0</div>
+                </div>
+            </div>
+
+            <!-- Rekening Info -->
+            <div class="bg-slate-800 rounded-2xl p-4 text-white shadow-xl relative">
+                <div class="text-[9px] text-slate-400 uppercase font-bold tracking-widest mb-1">Tujuan Transfer (OCBC)</div>
+                <div class="flex justify-between items-center">
+                    <span id="acc-number" class="text-base font-mono font-bold tracking-widest">693800135701</span>
+                    <button type="button" onclick="copyAcc()" class="text-[10px] bg-slate-700 px-2 py-1 rounded-md hover:bg-slate-600 active:scale-90 transition-all">SALIN</button>
+                </div>
+                <div class="text-[10px] text-slate-400 mt-1">a/n PT Kelas Kita Digital</div>
+            </div>
+
+            <div class="space-y-3">
+                <input type="text" name="entry.ID_KLIEN" placeholder="Nama Lengkap" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
+                <input type="email" name="entry.ID_EMAIL" placeholder="Email Aktif" required class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none text-sm shadow-sm">
+                
+                <div class="relative bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                    <label class="block text-[10px] font-bold text-slate-500 uppercase mb-2 flex items-center gap-2">
+                        <i class="fas fa-file-invoice"></i> Upload Bukti Transfer
+                    </label>
+                    <input type="file" name="entry.ID_BUKTI" id="input-bukti" required
+                        class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-blue-600">
+                </div>
+
+                <textarea name="entry.ID_TOPIK" placeholder="Ceritakan singkat topik permasalahanmu..." class="w-full px-4 py-3 rounded-xl border border-slate-100 bg-white focus:border-blue-300 outline-none h-20 resize-none text-sm shadow-sm"></textarea>
+            </div>
+
+            <button type="submit" id="btn-submit" 
+                class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold shadow-xl hover:bg-slate-900 transition-all flex items-center justify-center gap-3">
+                <span id="btn-text">Verifikasi & Submit Sesi</span>
+                <i id="btn-loader" class="fas fa-circle-notch animate-spin-custom hidden"></i>
+            </button>
+        </form>
+
+        <!-- Pesan Sibuk (Hidden by default) -->
+        <div id="busy-message" class="hidden text-center py-10">
+            <div class="text-5xl mb-4">😌</div>
+            <h3 class="conline-title text-xl text-slate-700 mb-2">Sedang Fokus Mendampingi</h3>
+            <p class="text-sm text-slate-500 px-4 leading-relaxed">Maaf ya Beb, konsultan ini sedang sibuk memberikan bimbingan intensif agar hasilnya maksimal. Pilih yang lain ya!</p>
+            <button onclick="window.history.back()" class="mt-8 px-6 py-2 border border-slate-200 rounded-full text-slate-500 font-semibold text-xs hover:bg-slate-50 transition-all shadow-sm">Kembali ke Dashboard</button>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl scale-95 transition-all text-center border border-white">
+            <div class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 shadow-inner">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 class="conline-title text-2xl mb-2 text-slate-800">Berhasil!</h3>
+            <p class="text-slate-500 text-sm mb-6 leading-relaxed">
+                Bukti bayar dan data pesanan sudah aman di sistem Conline.ID. Tim kami akan mengirimkan jadwal ke email kamu segera.
+            </p>
+            <button onclick="window.history.back()" class="w-full bg-slate-800 text-white py-4 rounded-xl font-semibold hover:bg-slate-700 transition-all shadow-lg">
+                Kembali ke Dashboard
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Ambil Data dari URL
+        const params = new URLSearchParams(window.location.search);
+        const namaK = params.get('nama') || "Konsultan Conline.ID";
+        const tarifK = parseInt(params.get('tarif')) || 0;
+        const statusK = params.get('status') || "Available";
+
+        // Element UI
+        const displayNama = document.getElementById('display-nama');
+        const displayTarif = document.getElementById('display-tarif');
+        const displayTotal = document.getElementById('display-total');
+        const inputSesi = document.getElementById('input-sesi');
+        const badgeStatus = document.getElementById('badge-status');
+        const form = document.getElementById('conline-form');
+        const busyMessage = document.getElementById('busy-message');
+        const btnSubmit = document.getElementById('btn-submit');
+
+        const formatRupiah = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+
+        // Fungsi Update Total
+        function updateTotal() {
+            const total = (inputSesi.value || 1) * tarifK;
+            displayTotal.innerText = formatRupiah(total);
+        }
+
+        // Jalankan saat halaman siap
+        window.addEventListener('load', () => {
+            // Set Hidden Data
+            document.getElementById('input-hidden-nama').value = namaK;
+            document.getElementById('input-hidden-tarif').value = tarifK;
+
+            if(statusK.toLowerCase() === 'busy') {
+                form.classList.add('hidden');
+                document.getElementById('info-section').classList.add('opacity-50');
+                busyMessage.classList.remove('hidden');
+                badgeStatus.innerText = "BUSY";
+                badgeStatus.className = "px-2 py-0.5 rounded-full text-[9px] font-bold bg-red-100 text-red-500";
+            } else {
+                displayNama.innerText = namaK;
+                displayTarif.innerText = formatRupiah(tarifK);
+                updateTotal();
+            }
+        });
+
+        inputSesi.addEventListener('input', updateTotal);
+
+        function handleFormSubmit() {
+            btnSubmit.disabled = true;
+            document.getElementById('btn-text').innerText = "Memproses...";
+            document.getElementById('btn-loader').classList.remove('hidden');
+            // Form akan otomatis terkirim ke Google Form Action URL
+            setTimeout(() => { 
+                document.getElementById('success-modal').classList.remove('hidden');
+            }, 3000);
+        }
+
+        function copyAcc() {
+            const accNum = document.getElementById('acc-number').innerText;
+            const temp = document.createElement("input");
+            temp.value = accNum; document.body.appendChild(temp); temp.select(); document.execCommand("copy"); document.body.removeChild(temp);
+            event.target.innerText = "OK!"; setTimeout(() => event.target.innerText = "SALIN", 2000);
+        }
+    </script>
+</body>
+</html>
